@@ -44,9 +44,6 @@ workflows:
 jobs:
   build:
     executor: node-executor
-    environment:
-      NETLIFY_SITE_ID: $NETLIFY_SITE_ID
-      NETLIFY_AUTH_TOKEN: $NETLIFY_AUTH_TOKEN
     working_directory: ~/repo
     steps:
       - gatsby-build
@@ -55,21 +52,9 @@ jobs:
           command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --dir=public
   release:
     executor: node-executor
-    # environment:
-    #   NETLIFY_SITE_ID: ${NETLIFY_SITE_ID}
-    #   NETLIFY_AUTH_TOKEN: ${NETLIFY_AUTH_TOKEN}
     working_directory: ~/repo
     steps:
       - gatsby-build
-      - run:
-          name: "What is NETLIFY_AUTH_TOKEN?"
-          command: echo ${NETLIFY_AUTH_TOKEN}
-      - run:
-          name: "What is NETLIFY_SITE_ID?"
-          command: echo ${NETLIFY_SITE_ID}
-      - run:
-          name: "What branch am I on now?"
-          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Netlify Deploy
           command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --prod --dir=public
