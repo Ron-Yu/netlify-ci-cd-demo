@@ -42,7 +42,7 @@ workflows:
               only:
                 - master
 jobs:
-  test:
+  build:
     executor: node-executor
     working_directory: ~/repo
     steps:
