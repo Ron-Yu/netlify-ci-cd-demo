@@ -46,6 +46,11 @@ jobs:
     executor: node-executor
     working_directory: ~/repo
     steps:
+      - gatsby-build
+      - run: sudo npm install -g @lhci/cli@0.3.x
+      - run:
+          name: lhci autorun
+          command: lhci autorun --upload.target=temporary-public-storage || echo "LHCI failed!"
       - run:
           name: "What branch am I on now?"
           command: echo $CIRCLE_BRANCH
@@ -53,6 +58,11 @@ jobs:
     executor: node-executor
     working_directory: ~/repo
     steps:
+      - gatsby-build
+      - run: sudo npm install -g @lhci/cli@0.3.x
+      - run:
+          name: lhci autorun
+          command: lhci autorun --upload.target=temporary-public-storage || echo "LHCI failed!"
       - run:
           name: "What branch am I on now?"
           command: echo $CIRCLE_BRANCH
