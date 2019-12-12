@@ -49,6 +49,13 @@ jobs:
       - run:
           name: "What branch am I on now?"
           command: echo $CIRCLE_BRANCH
+  release:
+    executor: node-executor
+    working_directory: ~/repo
+    steps:
+      - run:
+          name: "What branch am I on now?"
+          command: echo $CIRCLE_BRANCH
   # build:
   #   executor: node-executor
   #   working_directory: ~/repo
