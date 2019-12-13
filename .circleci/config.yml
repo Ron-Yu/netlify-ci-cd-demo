@@ -2,7 +2,7 @@ version: 2.1
 executors:
   node-executor:
     docker:
-      - image: ccircleci/node:10.16-browsers
+      - image: circleci/node:10
 commands:
   gatsby-build:
     steps:
@@ -44,41 +44,49 @@ workflows:
 jobs:
   build:
     executor: node-executor
+    environment:
+      # NETLIFY_SITE_ID: ${NETLIFY_SITE_ID}
+      # NETLIFY_AUTH_TOKEN: ${NETLIFY_AUTH_TOKEN}
+      BABY_NAME_Q: ${BABY_NAME}
     working_directory: ~/repo
     steps:
       - gatsby-build
-      - run: sudo npm install -g @lhci/cli@0.3.x
       - run:
-          name: lhci autorun
-          command: lhci autorun --upload.target=temporary-public-storage || echo "LHCI failed!"
+          name: "test custome env variable BABY_NAME"
+          command: echo ${BABY_NAME}
+      - run:
+          name: "test custome env variable BABY_NAME_Q"
+          command: echo ${BABY_NAME_Q}
       - run:
           name: "What branch am I on now?"
-          command: echo $CIRCLE_BRANCH
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: Netlify Deploy
+          command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --dir=public
   release:
     executor: node-executor
+    environment:
+      # NETLIFY_SITE_ID: ${NETLIFY_SITE_ID}
+      # NETLIFY_AUTH_TOKEN: ${NETLIFY_AUTH_TOKEN}
+      BABY_NAME_Q: ${BABY_NAME}
     working_directory: ~/repo
     steps:
       - gatsby-build
-      - run: sudo npm install -g @lhci/cli@0.3.x
+      # - run:
+      #     name: "What is NETLIFY_AUTH_TOKEN?"
+      #     command: echo ${NETLIFY_AUTH_TOKEN}
+      # - run:
+      #     name: "What is NETLIFY_SITE_ID?"
+      #     command: echo ${NETLIFY_SITE_ID}
       - run:
-          name: lhci autorun
-          command: lhci autorun --upload.target=temporary-public-storage || echo "LHCI failed!"
+          name: "test custome env variable BABY_NAME"
+          command: echo ${BABY_NAME}
+      - run:
+          name: "test custome env variable BABY_NAME_Q"
+          command: echo ${BABY_NAME_Q}
       - run:
           name: "What branch am I on now?"
-          command: echo $CIRCLE_BRANCH
-  # build:
-  #   executor: node-executor
-  #   working_directory: ~/repo
-  #   steps:
-  #     - gatsby-build
-  #     - run:
-  #         name: Netlify Deploy
-  #         command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --dir=public
-  # release:
-  #   executor: node-executor
-  #   working_directory: ~/repo
-  #   steps:
-  #     - gatsby-build
-  #     - run:
-  #         name: Netlify Deploy
-  #         command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --prod --dir=public
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: Netlify Deploy
+          command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --prod --dir=public
