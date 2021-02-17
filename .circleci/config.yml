@@ -44,17 +44,49 @@ workflows:
 jobs:
   build:
     executor: node-executor
+    environment:
+      # NETLIFY_SITE_ID: ${NETLIFY_SITE_ID}
+      # NETLIFY_AUTH_TOKEN: ${NETLIFY_AUTH_TOKEN}
+      BABY_NAME_Q: "${BABY_NAME}"
     working_directory: ~/repo
     steps:
       - gatsby-build
+      - run:
+          name: "test custome env variable BABY_NAME"
+          command: echo ${BABY_NAME}
+      - run:
+          name: "test custome env variable BABY_NAME_Q"
+          command: echo ${BABY_NAME_Q}
+      - run:
+          name: "What branch am I on now?"
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Netlify Deploy
           command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --dir=public
   release:
     executor: node-executor
+    environment:
+      # NETLIFY_SITE_ID: ${NETLIFY_SITE_ID}
+      # NETLIFY_AUTH_TOKEN: ${NETLIFY_AUTH_TOKEN}
+      BABY_NAME_Q: ${BABY_NAME}
     working_directory: ~/repo
     steps:
       - gatsby-build
+      # - run:
+      #     name: "What is NETLIFY_AUTH_TOKEN?"
+      #     command: echo ${NETLIFY_AUTH_TOKEN}
+      # - run:
+      #     name: "What is NETLIFY_SITE_ID?"
+      #     command: echo ${NETLIFY_SITE_ID}
+      - run:
+          name: "test custome env variable BABY_NAME"
+          command: echo ${BABY_NAME}
+      - run:
+          name: "test custome env variable BABY_NAME_Q"
+          command: echo ${BABY_NAME_Q}
+      - run:
+          name: "What branch am I on now?"
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Netlify Deploy
           command: ./node_modules/.bin/netlify deploy --auth $NETLIFY_AUTH_TOKEN --site $NETLIFY_SITE_ID --prod --dir=public
